@@ -52,14 +52,11 @@
                         <p class="card-text">Your last trip is <span id='amountPaid' class="amount"></span></p>
                         <a href="#" class="card-link">Change payment card</a>
                         <a href="#" class="card-link">Pay now</a>
-                        
                             <script src="https://api.ravepay.co/flwv3-pug/getpaidx/api/flwpbf-inline.js"></script>
                             <button type="button" onClick="payWithRave()">Pay Now</button>
-                        
-                        
                         <script>
                             paidAmount= document.getElementById ('amountPaid').innerHTML;
-                            const API_publicKey = '<FLWPUBK-6e12ee27b59f0c2c8a7d2d25c0f298a6-X>';
+                            const API_publicKey = 'FLWPUBK-47638216c6ac1c23f';
                             function payWithRave() {
                                 var x = getpaidSetup({
                                     PBFPubKey: 'c28b24559071faa9dc3497e1',
@@ -122,7 +119,7 @@
     <script src="https://code.jquery.com/jquery-3.3.1.slim.min.js"
         integrity="sha384-q8i/X+965DzO0rT7abK41JStQIAqVgRVzpbzo5smXKp4YfRvH+8abtTE1Pi6jizo" crossorigin="anonymous">
     </script>
-    <script src="/script.js"></script>
+    <script src="./script.js"></script>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.14.7/umd/popper.min.js"
         integrity="sha384-UO2eT0CpHqdSJQ6hJty5KVphtPhzWj9WO1clHTMGa3JDZwrnQq4sF86dIHNDz0W1" crossorigin="anonymous">
     </script>
