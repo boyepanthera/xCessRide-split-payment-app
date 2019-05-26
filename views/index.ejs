@@ -1,5 +1,6 @@
 <!DOCTYPE html>
 <html lang="en">
+
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
@@ -11,6 +12,9 @@
         integrity="sha384-oS3vJWv+0UjzBfQzYUhtDYW+Pj2yciDJxpsK1OYPAYjqT085Qq/1cq5FLXAZQ7Ay" crossorigin="anonymous">
     <link href="https://fonts.googleapis.com/css?family=Poppins" rel="stylesheet">
     <link rel="stylesheet" href="style/index.css">
+    <script src="https://code.jquery.com/jquery-3.3.1.slim.min.js"
+        integrity="sha384-q8i/X+965DzO0rT7abK41JStQIAqVgRVzpbzo5smXKp4YfRvH+8abtTE1Pi6jizo" crossorigin="anonymous">
+    </script>
 </head>
 
 <body>
@@ -49,56 +53,19 @@
                     <div class="card-body">
                         <h5 class="card-title">Payment Details</h5>
                         <h6 class="card-subtitle mb-2 text-muted">Card Details: </h6>
-                        <p class="card-text">Your last trip is <span id='amountPaid' class="amount"></span></p>
+                        <p class="card-text">Your last trip is <span class="amount"></span></p>
                         <a href="#" class="card-link">Change payment card</a>
-                        <a href="#" class="card-link">Pay now</a>
+                        <form>
                             <script src="https://api.ravepay.co/flwv3-pug/getpaidx/api/flwpbf-inline.js"></script>
-                            <button type="button" onClick="payWithRave()">Pay Now</button>
-                        <script>
-                            paidAmount= document.getElementById ('amountPaid').innerHTML;
-                            const API_publicKey = 'FLWPUBK-47638216c6ac1c23f';
-                            function payWithRave() {
-                                var x = getpaidSetup({
-                                    PBFPubKey: 'c28b24559071faa9dc3497e1',
-                                    customer_email: "user@example.com",
-                                    amount: paidAmount,
-                                    currency: "NGN",
-                                    txref: "rave-123456",
-                                    subaccounts: [
-                                        {
-                                            id: "RS_78C82FAEB580F8C7BF930C8C04C8D43D" // This assumes you have setup your commission on the dashboard.
-                                        }
-                                    ],
-                                    meta: [{
-                                        metaname: "flightID",
-                                        metavalue: "AP1234"
-                                    }],
-                                    onclose: function () { },
-                                    callback: function (response) {
-                                        var txref = response.tx.txRef; // collect flwRef returned and pass to a 					server page to complete status check.
-                                        console.log("This is the response returned after a charge", response);
-                                        if (
-                                            response.tx.chargeResponseCode == "00" ||
-                                            response.tx.chargeResponseCode == "0"
-                                        ) {
-                                            // redirect to a success page
-                                        } else {
-                                            // redirect to a failure page.
-                                        }
-
-                                        x.close(); // use this to close the modal immediately after payment.
-                                    }
-                                });
-                            }
-                        </script>
-
+                            <button class='btn btn-xs btn-primary' type="button" onClick="payWithRave()">Pay Now</button>
+                        </form>
                     </div>
                 </div>
             </div>
             <div class="col-md-4 col-sm-6">
                 <div class="card shadow" style="width: 19rem;">
                     <div class="card-body">
-                        <h5 class="card-title">Company Receives</h5>
+                        <h5 class="card-title">XcessRide Receives</h5>
                         <span id="companyAmount">
 
                         </span>
@@ -108,25 +75,84 @@
             <div class="col-md-4 col-sm-6">
                 <div class="card shadow" style="width: 19rem;">
                     <div class="card-body">
-                        <h5 class="card-title">Rider Receives</h5>
-                        <span id="riderAmount">
+                        <h5 class="card-title">Driver Receives</h5>
+                        <span id="driverAmount">
+
                         </span>
                     </div>
                 </div>
             </div>
         </div>
     </div>
+
+    <script>
+        let randAmount = Math.floor(Math.random() * 10000) + 500;
+        let spanAmount = $('.amount').html(`<p>₦${randAmount}`)
+        const API_publicKey = "FLWPUBK-47638216c6ac1c23f3b310ce900331dd-X";
+
+        function splitBills() {
+            let companyAmount = randAmount * 0.6;
+            let driverAmount = randAmount * 0.4;
+            $('#companyAmount').html(`<p>₦${companyAmount}`)
+            $('#driverAmount').html(`<p>₦${driverAmount}`)
+
+        }
+
+        splitBills()
+
+        function payWithRave() {
+            var x = getpaidSetup({
+                PBFPubKey: API_publicKey,
+                customer_email: "isaac.orija@gmail.com",
+                amount: randAmount,
+                currency: "NGN",
+                txref: "rave-123456",
+                subaccounts: [{
+                        id: "RS_BBBAE970D4E9B3EF1873F983B6CCED75",
+                        transaction_split_ratio: "2"
+                    },
+
+                    {
+                        id: "RS_58C9F743F42D9C3C4CFA4AB703DE5C51",
+                        transaction_split_ratio: "3"
+                    }
+                ],
+                meta: [{
+                    metaname: "flightID",
+                    metavalue: "AP1234"
+                }],
+                onclose: function () {},
+                callback: function (response) {
+                    var txref = response.tx
+                    .txRef; // collect flwRef returned and pass to a 					server page to complete status check.
+                    console.log("This is the response returned after a charge", response);
+                    if (
+                        response.tx.chargeResponseCode == "00" ||
+                        response.tx.chargeResponseCode == "0"
+                    ) {
+                        // redirect to a success page
+                    } else {
+                        // redirect to a failure page.
+                    }
+
+                    x.close(); // use this to close the modal immediately after payment.
+                }
+            });
+
+
+        }
+    </script>
+
     <script src="https://code.jquery.com/jquery-3.3.1.slim.min.js"
         integrity="sha384-q8i/X+965DzO0rT7abK41JStQIAqVgRVzpbzo5smXKp4YfRvH+8abtTE1Pi6jizo" crossorigin="anonymous">
     </script>
-    <script src="./script.js"></script>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.14.7/umd/popper.min.js"
         integrity="sha384-UO2eT0CpHqdSJQ6hJty5KVphtPhzWj9WO1clHTMGa3JDZwrnQq4sF86dIHNDz0W1" crossorigin="anonymous">
     </script>
     <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/js/bootstrap.min.js"
         integrity="sha384-JjSmVgyd0p3pXB1rRibZUAYoIIy6OrQ6VrjIEaFf/nJGzIxFDsf4x0xIM+B07jRM" crossorigin="anonymous">
     </script>
-    
+
 </body>
 
 </html>
